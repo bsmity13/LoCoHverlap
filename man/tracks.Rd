@@ -24,4 +24,44 @@ tracks
 \description{
 A dataset containing the simulated locations of 4 animals over 315 days.
 }
+\examples{
+\dontrun{
+# Load ggplot2
+library(ggplot2)
+
+# Load data
+data(tracks)
+
+# View head
+head(tracks)
+
+# Plot map of tracks
+ggplot(tracks, aes(x = x, y = y, color = id)) +
+  geom_path() +
+  coord_sf() +
+  xlab(NULL) +
+  ylab(NULL) +
+  theme_bw()
+
+# Map winter only
+winter <- tracks[which(tracks$season == "Winter"), ]
+ggplot(winter, aes(x = x, y = y, color = id)) +
+  geom_path() +
+  coord_sf() +
+  xlab(NULL) +
+  ylab(NULL) +
+  theme_bw()
+
+# Map summer only
+summer <- tracks[which(tracks$season == "Summer"), ]
+ggplot(summer, aes(x = x, y = y, color = id)) +
+  geom_path() +
+  coord_sf() +
+  xlab(NULL) +
+  ylab(NULL) +
+  theme_bw()
+
+}
+
+}
 \keyword{datasets}
