@@ -21,6 +21,9 @@ Imports:
     amt (>= 0.1.5),
     magrittr,
     raster,
-    CircStats
+    CircStats,
+    checkmate,
+    rlang,
+    sf
 Depends: 
     R (>= 3.5)
