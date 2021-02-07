@@ -15,13 +15,15 @@
 #' local hulls. Should be one of `"a"` (default), `"k"`, or `"r"`.
 #' @param n `[numeric = NA]` The value to use for the neighbor rule, *i.e.*, the
 #' value of either a, k, or r used to fit the local hulls.
-#' @param `...` Additional arguments passed to \code{\link{amt::hr_locoh}()}.
+#' @param ... Additional arguments passed to
+#' \code{\link[amt:hr_locoh]{hr_locoh}()}..
 #'
 #' @details A wrapper for `amt` functions to fit LoCoH home ranges. First
-#' creates a `track_xyt` object, then calls \code{\link{amt::hr_locoh}()}.
+#' creates a `track_xyt` object, then calls
+#' \code{\link[amt:hr_locoh]{hr_locoh}()}.
 #'
 #' @seealso
-#' \code{\link{amt::hr_locoh}()}
+#' \code{\link[amt:hr_locoh]{hr_locoh}()}.
 #' Getz et al. 2007 (*insert full citation here*)
 #'
 #' @examples
@@ -31,8 +33,8 @@
 #' @export
 fit_locoh <- function(dat, crs, type, n, ...) {
   dat %>%
-    make_track(x, y, t, crs = crs) %>%
-    hr_locoh(n = n, type = type,
+    amt::make_track(.x = dat$x, .y= dat$y, .t = dat$t, crs = crs) %>%
+    amt::hr_locoh(n = n, type = type,
              levels = seq(from = 0.01, to = 1, by = 0.01),
              ...)
 }

@@ -2,7 +2,7 @@ Package: LoCoHverlap
 Type: Package
 Title: Estimate animal range overlap using LoCoh and EMD
 Version: 0.1.0
-Author@R:
+Authors@R:
     person("Brian J.", "Smith", 
     email = "bjsmith@aggiemail.usu.edu", role = c("aut", "cre"))
 Description: Streamlines the workflow of estimating animal range overlap.
@@ -18,4 +18,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    amt
+    amt,
+    magrittr

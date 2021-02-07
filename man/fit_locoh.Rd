@@ -24,14 +24,16 @@ local hulls. Should be one of \code{"a"} (default), \code{"k"}, or \code{"r"}.}
 \item{n}{\verb{[numeric = NA]} The value to use for the neighbor rule, \emph{i.e.}, the
 value of either a, k, or r used to fit the local hulls.}
 
-\item{`...`}{Additional arguments passed to \code{\link{amt::hr_locoh}()}.}
+\item{...}{Additional arguments passed to
+\code{\link[amt:hr_locoh]{hr_locoh}()}..}
 }
 \description{
 Fits a single LoCoH home range to data
 }
 \details{
 A wrapper for \code{amt} functions to fit LoCoH home ranges. First
-creates a \code{track_xyt} object, then calls \code{\link{amt::hr_locoh}()}.
+creates a \code{track_xyt} object, then calls
+\code{\link[amt:hr_locoh]{hr_locoh}()}.
 }
 \examples{
 \dontrun{
@@ -39,6 +41,6 @@ creates a \code{track_xyt} object, then calls \code{\link{amt::hr_locoh}()}.
 }
 }
 \seealso{
-\code{\link{amt::hr_locoh}()}
+\code{\link[amt:hr_locoh]{hr_locoh}()}.
 Getz et al. 2007 (\emph{insert full citation here})
 }
