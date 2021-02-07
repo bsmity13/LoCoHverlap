@@ -52,7 +52,7 @@ This package is in the early stages of development and is not yet functional. Th
     - [ ] Compare an individual across seasons
   - [ ] Moving window workflow
     - [ ] Use moving window to implement basic workflow and compare consecutive ranges
-  - [ ] Simulated example data to be used in help files and vignettes
+  - [x] Simulated example data to be used in help files and vignettes
   - [ ] Vignette for each workflow
     - [ ] Basic
     - [ ] Seasonal

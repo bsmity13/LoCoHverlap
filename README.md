@@ -51,7 +51,7 @@ functional. The currently planned updates are:
   - [ ] Moving window workflow
       - [ ] Use moving window to implement basic workflow and compare
         consecutive ranges
-  - [ ] Simulated example data to be used in help files and vignettes
+  - [x] Simulated example data to be used in help files and vignettes
   - [ ] Vignette for each workflow
       - [ ] Basic
       - [ ] Seasonal
