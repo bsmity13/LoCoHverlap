@@ -6,9 +6,9 @@ Author@R:
     person("Brian J.", "Smith", 
     email = "bjsmith@aggiemail.usu.edu", role = c("aut", "cre"))
 Description: Streamlines the workflow of estimating animal range overlap.
-First fits Local Convex Hulls (LoCoHs) to the animal location data. Then 
-converts each LoCoH to a utilization distribution (UD). Finally, estimates
-overlap using Earth Mover's Distance (EMD).
+    First fits Local Convex Hulls (LoCoHs) to the animal location data. Then 
+    converts each LoCoH to a utilization distribution (UD). Finally, estimates
+    overlap using Earth Mover's Distance (EMD).
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
