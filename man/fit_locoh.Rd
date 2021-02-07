@@ -4,7 +4,7 @@
 \alias{fit_locoh}
 \title{Fit one LoCoH home range}
 \usage{
-fit_locoh(dat, type, n, rand_buffer)
+fit_locoh(dat, crs, type, n, ...)
 }
 \arguments{
 \item{dat}{\verb{[data.frame]} The location data used for fitting the LoCoH.
@@ -14,6 +14,9 @@ Should contain the following columns:
 \item \verb{$y} -- The y-coordinate of the animal's location
 \item \verb{$t} -- The date and time (as a \code{POSIXct} object) of the location
 }}
+
+\item{crs}{\verb{[sp::CRS = NULL]} The (optional) coordinate reference system for
+the location data.}
 
 \item{type}{\verb{[character = "a"]} The type of neighbor rule used to create the
 local hulls. Should be one of \code{"a"} (default), \code{"k"}, or \code{"r"}.}
@@ -27,7 +30,8 @@ value of either a, k, or r used to fit the local hulls.}
 Fits a single LoCoH home range to data
 }
 \details{
-A wrapper for \code{\link{amt::hr_locoh}()}.
+A wrapper for \code{amt} functions to fit LoCoH home ranges. First
+creates a \code{track_xyt} object, then calls \code{\link{amt::hr_locoh}()}.
 }
 \examples{
 \dontrun{

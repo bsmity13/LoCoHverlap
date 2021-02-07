@@ -9,6 +9,8 @@
 #'   * `$x` -- The x-coordinate of the animal's location
 #'   * `$y` -- The y-coordinate of the animal's location
 #'   * `$t` -- The date and time (as a `POSIXct` object) of the location
+#' @param crs `[sp::CRS = NULL]` The (optional) coordinate reference system for
+#' the location data.
 #' @param type `[character = "a"]` The type of neighbor rule used to create the
 #' local hulls. Should be one of `"a"` (default), `"k"`, or `"r"`.
 #' @param n `[numeric = NA]` The value to use for the neighbor rule, *i.e.*, the
@@ -27,6 +29,10 @@
 #' # Example
 #' }
 #' @export
-fit_locoh <- function(dat, type, n, rand_buffer) {
-
+fit_locoh <- function(dat, crs, type, n, ...) {
+  dat %>%
+    make_track(x, y, t, crs = crs) %>%
+    hr_locoh(n = n, type = type,
+             levels = seq(from = 0.01, to = 1, by = 0.01),
+             ...)
 }
