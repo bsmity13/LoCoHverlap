@@ -26,6 +26,7 @@ A dataset containing the simulated locations of 4 animals over 315 days.
 }
 \examples{
 \dontrun{
+
 # Load ggplot2
 library(ggplot2)
 
