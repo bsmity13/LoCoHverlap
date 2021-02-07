@@ -1,5 +1,6 @@
 ## code to prepare `tracks` dataset goes here
 
+library(LoCoHverlap)
 # Simulate data for 4 individuals
 # Dataset needs to be useful for demonstrating:
 #   - basic workflow
