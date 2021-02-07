@@ -4,7 +4,7 @@
 \alias{fit_locoh}
 \title{Fit one LoCoH home range}
 \usage{
-fit_locoh(dat, crs, type, n, ...)
+fit_locoh(dat, crs = NULL, type = "a", n, ...)
 }
 \arguments{
 \item{dat}{\verb{[data.frame]} The location data used for fitting the LoCoH.

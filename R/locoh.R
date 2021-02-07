@@ -31,7 +31,26 @@
 #' # Example
 #' }
 #' @export
-fit_locoh <- function(dat, crs, type, n, ...) {
+fit_locoh <- function(dat, crs = NULL, type = "a", n, ...) {
+  # Check `dat`
+  if (!inherits(dat, "data.frame")){
+    stop("Argument `dat` should be a data.frame.")
+  }
+
+  # Check `crs`
+  if (!is.null(crs) & !inherits(crs, "CRS")){
+    stop("Argument `crs` should be NULL or of class \"CRS\".",
+         "\n  See ?sp::CRS for details.")
+  }
+
+  # Check `type`
+  if (!(type %in% c("a", "k", "r"))) {
+    stop("Argument `type` must be one of \"a\", \"k\", or \"r\".")
+  }
+
+  # Check `n`
+
+
   dat %>%
     amt::make_track(.x = dat$x, .y= dat$y, .t = dat$t, crs = crs) %>%
     amt::hr_locoh(n = n, type = type,
