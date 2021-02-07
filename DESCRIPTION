@@ -1,11 +1,14 @@
 Package: LoCoHverlap
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Estimate animal range overlap using LoCoh and EMD
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author@R:
+    person("Brian J.", "Smith", 
+    email = "bjsmith@aggiemail.usu.edu", role = c("aut", "cre"))
+Description: Streamlines the workflow of estimating animal range overlap.
+First fits Local Convex Hulls (LoCoHs) to the animal location data. Then 
+converts each LoCoH to a utilization distribution (UD). Finally, estimates
+overlap using Earth Mover's Distance (EMD).
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
