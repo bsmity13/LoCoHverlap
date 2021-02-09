@@ -1,5 +1,6 @@
 # Functions to fit LoCoH home ranges
 
+# Fit one LoCoH ----
 #' Fit one LoCoH home range
 #'
 #' Fits a single LoCoH home range to data
@@ -62,12 +63,14 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
   return(locoh)
 }
 
+# Calculate a* ----
 #' Calculate a*
 #'
 #' Calculates suggested starting value for `a` under a-LoCoH
 #'
-#' @param dat `[data.frame]` The location data used for fitting the LoCoH.
-#' Should contain the following columns:
+#' @param dat `[data.frame | list]` The location data used for fitting the
+#' LoCoH. Can be a single `data.frame` or a list of `data.frame`s with the
+#' following columns:
 #'   * `$x` -- The x-coordinate of the animal's location
 #'   * `$y` -- The y-coordinate of the animal's location
 #'   * `$t` -- The date and time (as a `POSIXct` object) of the location
@@ -81,14 +84,31 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
 #'
 #' @examples
 #'
+#' \dontrun{
 #' data(tracks)
 #'
+#' # data.frame
 #' winter01 <- tracks[which(tracks$id == "ID01" & tracks$season == "Winter"), ]
 #'
 #' a_star(winter01)
 #'
+#' # list
+#' winter <- tracks[which(tracks$season == "Winter"), ]
+#'
+#' winter_list <- split(winter, winter$id)
+#'
+#' a_star(winter)
+#' }
+#'
+#' @rdname a_star
 #' @export
 a_star <- function(dat) {
+  UseMethod("a_star", dat)
+}
+
+#' @rdname a_star
+#' @export
+a_star.data.frame <- function(dat) {
   # Check `dat`
   checkmate::assert_data_frame(dat)
 
@@ -102,6 +122,23 @@ a_star <- function(dat) {
   return(a)
 }
 
+#' @rdname a_star
+#' @export
+a_star.list <- function(dat) {
+  # Check `dat`
+  checkmate::assert_list(dat, types = "data.frame")
+
+  # Get a-star from all
+  a_all <- lapply(dat, a_star.data.frame)
+
+  # Keep max
+  a <- max(unlist(a_all))
+
+  # Return
+  return(a)
+}
+
+# Rasterize LoCoH ----
 #' Create a UD from a LoCoH
 #'
 #' Converts a fitted LoCoH to a utilization distribution
@@ -160,4 +197,103 @@ rasterize_locoh <- function(locoh, r, res) {
 
   # Return
   return(nr)
+}
+
+# Calculate EMD for list of rasters ----
+# Note, move::emd() calculates EMD for 1 pair of HRs
+
+#' Calculate EMD
+#'
+#' Calculates Earth-mover's distance for a list of rasters
+#'
+#' @param r_list `[list]` List of `r` rasterized home ranges to compare.
+#' @param mat `[matrix]` `r` x `r` matrix of indicating whether a row-column
+#' pair should have its EMD calculated. Can be logical or integer(ish). EMD
+#' will be calculated for pairs where `mat == TRUE` or `mat == 1`. See details.
+#' @param check_symmetric `[logical = TRUE]` Controls whether function will check for
+#' `mat` for symmetry. See details.
+#'
+#' @details
+#'
+#' EMD calculations are symmetric, i.e., `emd(x, y) == emd(y, x)`.
+#' These calculations are time-consuming, so you will probably want to avoid
+#' providing a symmetric matrix. The argument `check_symmetric` defaults to
+#' `TRUE` and causes the function to stop if your matrix is symmetric so you
+#' can correct this before proceeding.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Load data
+#' data(tracks)
+#'
+#' # Keep only winter data
+#' winter <- tracks[which(tracks$season == "Winter"), ]
+#'
+#' # Split by ID
+#' winter_list <- split(winter, winter$id)
+#'
+#' # Calculate a for a-LoCoH
+#' a <- a_star(winter_list)
+#'
+#' # Fit LoCoHs
+#' locoh_list <- lapply(winter_list, fit_locoh, n = a)
+#'
+#' # Rasterize
+#' r_list <- lapply(locoh_list, rasterize_locoh, res = 500)
+#'
+#' # Matrix of comparisons
+#' comp <- matrix(0,
+#' nrow = length(winter_list),
+#' ncol = length(winter_list))
+#'
+#' comp[1, 2] <- comp[2, 3] <- comp[3, 4] <- 1
+#'
+#' # Calculate EMD
+#' EMD <- calc_emd(r_list, mat = comp)
+#' }
+#'
+#' @export
+calc_emd <- function(r_list, mat, check_symmetric = TRUE) {
+
+  # Check inputs
+
+  # Check `r_list`
+  checkmate::check_list(r_list, types = "RasterLayer")
+
+  # Check `mat`
+  checkmate::check_matrix(mat)
+
+  # Check `check_symmetric`
+  checkmate::check_logical(check_symmetric)
+
+  # Possibly check for symmetry
+  if (check_symmetric) {
+    if (isSymmetric) {
+      stop("Matrix `mat` is symmetric. Decrease estimation time by keeping ",
+           "only 1 triangle (see ?upper.tri) or ignore this check by setting ",
+           "`check_symmetric` = FALSE.")
+    }
+  }
+
+  # Get pairs of EMD to calculate
+
+  # Coerce to logical
+  mode(mat) <- "logical"
+
+  # Get pairs
+  pairs <- which(mat, arr.ind = TRUE)
+
+  # Calculate EMD
+  emd_vect <- apply(pairs, 1, function(x) {
+    move::emd(r_list[[x[1]]], r_list[[x[2]]])
+  })
+
+  # Construct data.frame to return
+  df <- as.data.frame(cbind(pairs, emd_vect))
+  names(df) <- c("x", "y", "emd")
+  df$log_emd <- log(df$emd)
+
+  # Return
+  return(df)
 }

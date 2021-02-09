@@ -2,13 +2,20 @@
 % Please edit documentation in R/basic.R
 \name{a_star}
 \alias{a_star}
+\alias{a_star.data.frame}
+\alias{a_star.list}
 \title{Calculate a*}
 \usage{
 a_star(dat)
+
+\method{a_star}{data.frame}(dat)
+
+\method{a_star}{list}(dat)
 }
 \arguments{
-\item{dat}{\verb{[data.frame]} The location data used for fitting the LoCoH.
-Should contain the following columns:
+\item{dat}{\verb{[data.frame | list]} The location data used for fitting the
+LoCoH. Can be a single \code{data.frame} or a list of \code{data.frame}s with the
+following columns:
 \itemize{
 \item \verb{$x} -- The x-coordinate of the animal's location
 \item \verb{$y} -- The y-coordinate of the animal's location
@@ -27,11 +34,21 @@ dataset.
 }
 \examples{
 
+\dontrun{
 data(tracks)
 
+# data.frame
 winter01 <- tracks[which(tracks$id == "ID01" & tracks$season == "Winter"), ]
 
 a_star(winter01)
+
+# list
+winter <- tracks[which(tracks$season == "Winter"), ]
+
+winter_list <- split(winter, winter$id)
+
+a_star(winter)
+}
 
 }
 \seealso{

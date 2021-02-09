@@ -41,10 +41,10 @@ devtools::install_github("bsmity13/LoCoHverlap")
 This package is in the early stages of development and is not yet
 functional. The currently planned updates are:
 
-  - [ ] Basic workflow
+  - [x] Basic workflow
       - [x] Basic function to fit 1 LoCoH
       - [x] Basic function to rasterize 1 LoCoH
-      - [ ] Basic function to calculate EMD between any number of LoCoHs
+      - [x] Basic function to calculate EMD between any number of LoCoHs
   - [ ] Seasonal overlap workflow
       - [ ] Iterate basic workflow over individuals in a season
       - [ ] Compare individuals within a season

@@ -8,7 +8,7 @@
 A \code{data.frame} with 5040 rows and 5 fields:
 \describe{
 \item{id}{Unique identifier of each animal.}
-\item{dt}{Date and time of location.}
+\item{t}{Date and time of location.}
 \item{x}{Location x-coordinate in UTMs (zone 12, epsg:32612)}
 \item{y}{Location y-coordinate in UTMs (zone 12, epsg:32612)}
 \item{season}{Season of corresponding movement behavior (winter,
