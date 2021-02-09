@@ -106,6 +106,58 @@ a_star <- function(dat) {
 #'
 #' Converts a fitted LoCoH to a utilization distribution
 #'
-#' @param locoh `[hr_locoh]` The fitted LoCoH returned by
+#' @param locoh `[locoh]` The fitted LoCoH returned by
 #' \code{\link{fit_locoh}()}.
-#' @param rast `[RasterLayer]` The template raster to estimate the UD on.
+#' @param r `[RasterLayer]` The template raster to estimate the UD on.
+#' If not specified, a raster will be created using the bounding box of `locoh`
+#' and the resolution specified by `res`.
+#' @param res `[numeric]` The resolution of the `RasterLayer` to create as the
+#' template raster. Ignored if `rast` is provided.
+#'
+#'
+#' @export
+rasterize_locoh <- function(locoh, r, res) {
+
+  # Check `locoh`
+  checkmate::assert_class(locoh, "locoh")
+
+  # Check whether `r` is provided or should be created
+  if (missing(r)) {
+    # Check `res`
+    if (missing(res)) {
+      stop("If `r` is not specified, you must specify `res`.")
+    }
+    checkmate::assert_numeric(res, lower = 1, max.len = 2, all.missing = FALSE)
+
+    # Create `r`
+
+    # -- Get bounding box
+    bb <- amt::hr_isopleths(locoh) %>%
+      # Get bounding box from isopleth sf geometries
+      sf::st_bbox() %>%
+      # Convert bounding box to sf polygon
+      sf::st_as_sfc() %>%
+      # Convert to SpatialPolygon
+      sf::as_Spatial()
+
+    # -- Rasterize bb (should inherit CRS from bb)
+    r <- raster::raster(bb, res = res)
+
+  } else {
+    # If `r` is provided
+    # Check `r`
+    checkmate::assert_class(r, "Raster", null.ok = TRUE)
+  }
+
+  # Rasterize LoCoH
+  rr <- amt::hr_isopleths(locoh) %>%
+    raster::rasterize(r, field = "level", fun = "first", background = NA)
+  # Convert isopleths to probabilities and renormalize
+  v <- raster::getValues(rr)
+  v <- 1 - v
+  v[is.na(v)] <- 0
+  nr <- raster::setValues(rr, v/sum(v, na.rm = TRUE))
+
+  # Return
+  return(nr)
+}

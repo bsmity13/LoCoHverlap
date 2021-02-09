@@ -24,6 +24,7 @@ Imports:
     CircStats,
     checkmate,
     rlang,
-    sf
+    sf,
+    move
 Depends: 
     R (>= 3.5)
