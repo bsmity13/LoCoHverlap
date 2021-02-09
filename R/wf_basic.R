@@ -1,4 +1,4 @@
-# Functions to fit LoCoH home ranges
+# Functions for basic workflow
 
 # Fit one LoCoH ----
 #' Fit one LoCoH home range
