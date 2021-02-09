@@ -11,6 +11,7 @@ GPL-3](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://cran.r-pro
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/bsmity13/LoCoHverlap)
+[![R-CMD-check](https://github.com/bsmity13/LoCoHverlap/workflows/R-CMD-check/badge.svg)](https://github.com/bsmity13/LoCoHverlap/actions)
 <!-- badges: end -->
 
 `LoCoHverlap` (pronounced “Loke - Overlap”) is an R package to compare

@@ -20,6 +20,7 @@ library(badger)
 `r badge_license("GPL-3")`
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 `r badge_devel("bsmity13/LoCoHverlap", "blue")`
+[![R-CMD-check](https://github.com/bsmity13/LoCoHverlap/workflows/R-CMD-check/badge.svg)](https://github.com/bsmity13/LoCoHverlap/actions)
 <!-- badges: end -->
 
 `LoCoHverlap` (pronounced "Loke - Overlap") is an R package to compare animal range overlaps using Local Convex Hull (LoCoH) home range estimators and Earth Mover's Distance (EMD). It streamlines the following workflow:  
