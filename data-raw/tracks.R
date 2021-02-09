@@ -184,18 +184,18 @@ plot(sdat$x, sdat$y, col = factor(sdat$id))
 
 # Assign dates ----
 # Winter
-wdat$dt <- seq(from = lubridate::ymd_hms("2021-01-01 00:00:00",
+wdat$t <- seq(from = lubridate::ymd_hms("2021-01-01 00:00:00",
                                          tz = "US/Mountain"),
                by = "1 hour",
                length.out = n_winter)
 wdat$season <- "Winter"
 # Migration
-mdat$dt <- seq(from = wdat$dt[n_winter] + lubridate::hours(1),
+mdat$t <- seq(from = wdat$t[n_winter] + lubridate::hours(1),
                by = "1 hour",
                length.out = n_mig)
 mdat$season <- "Migration"
 # Summer
-sdat$dt <- seq(from = mdat$dt[n_mig] + lubridate::hours(1),
+sdat$t <- seq(from = mdat$t[n_mig] + lubridate::hours(1),
                by = "1 hour",
                length.out = n_summer)
 sdat$season <- "Summer"
@@ -203,19 +203,18 @@ sdat$season <- "Summer"
 # Combine all ----
 comb <- rbind(wdat, mdat, sdat)
 row.names(comb) <- NULL
-comb$t <- NULL
 
 # Plot
 plot(comb$x, comb$y, col = factor(comb$id))
 
 # Thin ----
 tracks <- comb
-tracks$hour <- as.numeric(format(tracks$dt, "%H"))
+tracks$hour <- as.numeric(format(tracks$t, "%H"))
 tracks <- tracks[which(tracks$hour %in% c(0, 6, 12, 18)), ]
 tracks$hour <- NULL
 
 # Re-order
-tracks <- tracks[, c("id", "dt", "x", "y", "season")]
+tracks <- tracks[, c("id", "t", "x", "y", "season")]
 
 # Plot
 plot(tracks$x, tracks$y, col = factor(tracks$id))
