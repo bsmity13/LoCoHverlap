@@ -57,6 +57,7 @@ functional. The currently planned updates are:
       - [ ] Basic
       - [ ] Seasonal
       - [ ] Moving window
+  - [ ] Parallelize workflow
 
 This README will be updated as new functionality comes online or
 workflow is revised.

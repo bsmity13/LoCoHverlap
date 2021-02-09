@@ -58,5 +58,6 @@ This package is in the early stages of development and is not yet functional. Th
     - [ ] Basic
     - [ ] Seasonal
     - [ ] Moving window
+  - [ ] Parallelize workflow
     
 This README will be updated as new functionality comes online or workflow is revised.
