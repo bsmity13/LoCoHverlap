@@ -39,7 +39,7 @@ winter <- tracks[which(tracks$season == "Winter"), ]
 winter_list <- split(winter, winter$id)
 
 # Calculate a for a-LoCoH
-a <- a_star(winter_list)
+a <- a_default(winter_list)
 
 # Fit LoCoHs
 locoh_list <- lapply(winter_list, fit_locoh, n = a)

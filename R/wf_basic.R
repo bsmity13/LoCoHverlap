@@ -53,11 +53,13 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
   checkmate::assert_number(n, lower = 0)
 
   # Fit LoCoH
-  locoh <- dat %>%
-    amt::make_track(.x = .data$x, .y = .data$y, .t = .data$t, crs = crs) %>%
-    amt::hr_locoh(n = n, type = type,
-             levels = seq(from = 0.01, to = 1, by = 0.01),
-             ...)
+  suppressMessages({
+    locoh <- dat %>%
+      amt::make_track(.x = .data$x, .y = .data$y, .t = .data$t, crs = crs) %>%
+      amt::hr_locoh(n = n, type = type,
+                    levels = seq(from = 0.01, to = 1, by = 0.01),
+                    ...)
+  })
 
   # Return
   return(locoh)
@@ -82,6 +84,7 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
 #' `data.frame`s) if `dat` is a `list`. Ignored if `dat` is a `data.frame`.
 #' Defaults to `max` for `a_default()` and to `mean` for `k_default()` and
 #' `r_default()`.
+#' @param ... Extra arguments passed to methods (none currently implemented).
 #'
 #' @details
 #' \itemize{
@@ -143,7 +146,7 @@ a_default <- function(dat, ...) {
 
 #' @rdname a_default
 #' @export
-a_default.data.frame <- function(dat) {
+a_default.data.frame <- function(dat, ...) {
   # Check `dat`
   checkmate::assert_data_frame(dat)
 
@@ -159,7 +162,7 @@ a_default.data.frame <- function(dat) {
 
 #' @rdname a_default
 #' @export
-a_default.list <- function(dat, FUN = max) {
+a_default.list <- function(dat, FUN = max, ...) {
   # Check `dat`
   checkmate::assert_list(dat, types = "data.frame")
 
@@ -182,7 +185,7 @@ k_default <- function(dat, ...) {
 
 #' @rdname a_default
 #' @export
-k_default.data.frame <- function(dat) {
+k_default.data.frame <- function(dat, ...) {
   # Check `dat`
   checkmate::assert_data_frame(dat)
 
@@ -195,7 +198,7 @@ k_default.data.frame <- function(dat) {
 
 #' @rdname a_default
 #' @export
-k_default.list <- function(dat, FUN = mean) {
+k_default.list <- function(dat, FUN = mean, ...) {
   # Check `dat`
   checkmate::assert_list(dat, types = "data.frame")
 
@@ -218,7 +221,7 @@ r_default <- function(dat, ...) {
 
 #' @rdname a_default
 #' @export
-r_default.data.frame <- function(dat) {
+r_default.data.frame <- function(dat, ...) {
   # Check `dat`
   checkmate::assert_data_frame(dat)
 
@@ -243,7 +246,7 @@ r_default.data.frame <- function(dat) {
 
 #' @rdname a_default
 #' @export
-r_default.list <- function(dat, FUN = mean) {
+r_default.list <- function(dat, FUN = mean, ...) {
   # Check `dat`
   checkmate::assert_list(dat, types = "data.frame")
 
@@ -302,7 +305,7 @@ rasterize_locoh <- function(locoh, r, res) {
   } else {
     # If `r` is provided
     # Check `r`
-    checkmate::assert_class(r, "Raster", null.ok = TRUE)
+    checkmate::assert_class(r, "Raster")
   }
 
   # Rasterize LoCoH
@@ -311,7 +314,14 @@ rasterize_locoh <- function(locoh, r, res) {
   # Convert isopleths to probabilities and renormalize
   v <- raster::getValues(rr)
   v <- 1 - v
-  v[is.na(v)] <- 0
+  # If only a 100% isopleth was returned, all values will be 0 now.
+  if (sum(v, na.rm = TRUE) == 0) {
+    # Set NAs to -1 and then add 1 to all
+    v[is.na(v)] <- -1
+    v <- v + 1
+  } else {
+    v[is.na(v)] <- 0
+  }
   nr <- raster::setValues(rr, v/sum(v, na.rm = TRUE))
 
   # Return

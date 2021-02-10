@@ -13,12 +13,28 @@ individual. Should have same columns as \code{dat} for \code{\link{fit_locoh}()}
 \item{mv_wind}{\verb{[mv_wind]} An \code{mv_wind} object returned by
 \code{\link{construct_windows}()}.}
 }
+\value{
+Returns a nested \code{data.frame} (a \code{tbl}) with columns:
+\itemize{
+\item \code{window} -- An integer indexing the window number
+\item \code{start} -- The date and time of the window start (class \code{POSIXct})
+\item \code{end} -- The date and time of the window end (class \code{POSIXct})
+\item \code{data} -- A list column containing \code{tbl}s with the animal location
+data. It has columns:
+\itemize{
+\item \code{t} -- The location timestamp (class \code{POSIXct})
+\item \code{x} -- The x-coordinate of the location
+\item \code{y} -- The y-coordinate of the location
+}
+}
+}
 \description{
 Creates a nested \code{data.frame} from an \code{mv_wind} object
 }
 \details{
-Uses \code{\link[tidyr:nest]{nest}()} and
-\code{\link[sqldf:sqldf]{sqldf}()}
+Uses \code{\link[sqldf:sqldf]{sqldf}()} to join locations to windows
+that they fall within. Then uses \code{\link[tidyr:nest]{nest}()} to create
+a nested \code{data.frame} holding the location data in a list column.
 }
 \examples{
 \dontrun{

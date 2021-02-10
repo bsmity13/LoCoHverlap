@@ -28,6 +28,7 @@ Imports:
     move,
     lubridate,
     tidyr,
-    sqldf
+    sqldf,
+    dplyr
 Depends: 
     R (>= 3.5)

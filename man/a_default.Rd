@@ -14,21 +14,21 @@
 \usage{
 a_default(dat, ...)
 
-\method{a_default}{data.frame}(dat)
+\method{a_default}{data.frame}(dat, ...)
 
-\method{a_default}{list}(dat, FUN = max)
+\method{a_default}{list}(dat, FUN = max, ...)
 
 k_default(dat, ...)
 
-\method{k_default}{data.frame}(dat)
+\method{k_default}{data.frame}(dat, ...)
 
-\method{k_default}{list}(dat, FUN = mean)
+\method{k_default}{list}(dat, FUN = mean, ...)
 
 r_default(dat, ...)
 
-\method{r_default}{data.frame}(dat)
+\method{r_default}{data.frame}(dat, ...)
 
-\method{r_default}{list}(dat, FUN = mean)
+\method{r_default}{list}(dat, FUN = mean, ...)
 }
 \arguments{
 \item{dat}{\verb{[data.frame | list]} The location data used for fitting the
@@ -40,6 +40,8 @@ following columns:
 \item \verb{$t} -- The date and time (as a \code{POSIXct} object) of the location
 }}
 
+\item{...}{Extra arguments passed to methods (none currently implemented).}
+
 \item{FUN}{\verb{[function]} A function to summarize across list elements (the
 \code{data.frame}s) if \code{dat} is a \code{list}. Ignored if \code{dat} is a \code{data.frame}.
 Defaults to \code{max} for \code{a_default()} and to \code{mean} for \code{k_default()} and
@@ -49,8 +51,8 @@ Defaults to \code{max} for \code{a_default()} and to \code{mean} for \code{k_def
 A numeric vector of length 1 with the value of \code{a}, \code{k}, or \code{r}
 }
 \description{
-Calculates suggested starting value for \code{a}, \code{k}, or \code{r}
-under a-LoCoH
+Calculates suggested starting value for \code{a}, \code{k}, or \code{r} for constructing
+local convex hulls.
 }
 \details{
 \itemize{
@@ -62,11 +64,16 @@ points in the dataset.
 distance between points in the dataset.
 }
 
-\emph{Note}: \code{r_default()} is the most time-consuming algorithm and has the least
-desirable properties (see Getz et al. 2007). \code{a_default()} also requires
-calculating a distance matrix -- so can also be somewhat time consuming --
-but Getz et al. (2007) find the resulting LoCoH is very robust to the value
-of \code{a}. \code{k_default()} is the easiest to compute as it depends only on the
+\emph{Note}: computation times can get large with a large dataset.
+
+\code{r_default()} is the most time-consuming algorithm and has the least
+desirable properties (see Getz et al. 2007).
+
+\code{a_default()} also requires calculating a distance matrix -- so can also be
+somewhat time consuming -- but Getz et al. (2007) found the resulting LoCoH
+is robust to the value of \code{a}.
+
+\code{k_default()} is the easiest to compute as it depends only on the
 number of points and does not require a distance matrix.
 }
 \examples{

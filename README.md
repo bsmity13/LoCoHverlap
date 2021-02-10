@@ -49,9 +49,9 @@ functional. The currently planned updates are:
       - [ ] Iterate basic workflow over individuals in a season
       - [ ] Compare individuals within a season
       - [ ] Compare an individual across seasons
-  - [ ] Moving window workflow
-      - [ ] Use moving window to implement basic workflow and compare
-        consecutive ranges
+  - [x] Moving window workflow
+      - [x] Use moving window to compare consecutive ranges of an
+        individual along a track
   - [x] Simulated example data to be used in help files and vignettes
   - [ ] Vignette for each workflow
       - [ ] Basic
