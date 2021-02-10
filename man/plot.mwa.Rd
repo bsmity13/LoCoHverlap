@@ -4,7 +4,7 @@
 \alias{plot.mwa}
 \title{Plot an \code{mwa} Object}
 \usage{
-\method{plot}{mwa}(x, set_par = TRUE, ...)
+\method{plot}{mwa}(x, set_par = TRUE, log = TRUE, ...)
 }
 \arguments{
 \item{x}{\verb{[mwa]} An object of class \code{mwa} returned by
@@ -12,6 +12,9 @@
 
 \item{set_par}{\verb{[logical = TRUE]} Should the function be allowed to set
 its own graphical parameters?}
+
+\item{log}{\verb{[logical = TRUE]} Should the function plot \code{log(emd)} (default)
+or just \code{emd}?}
 
 \item{...}{Arguments passed to \code{plot.default()}.}
 }
