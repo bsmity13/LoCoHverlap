@@ -63,10 +63,14 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
   return(locoh)
 }
 
-# Calculate a* ----
-#' Calculate a*
+# Calculate default LoCoH parameters ----
+
+#' Calculate Default LoCoH Parameters
 #'
-#' Calculates suggested starting value for `a` under a-LoCoH
+#' Calculates suggested starting value for `a`, `k`, or `r` for constructing
+#' local convex hulls.
+#'
+#' @rdname a_default
 #'
 #' @param dat `[data.frame | list]` The location data used for fitting the
 #' LoCoH. Can be a single `data.frame` or a list of `data.frame`s with the
@@ -74,13 +78,37 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
 #'   * `$x` -- The x-coordinate of the animal's location
 #'   * `$y` -- The y-coordinate of the animal's location
 #'   * `$t` -- The date and time (as a `POSIXct` object) of the location
+#' @param FUN `[function]` A function to summarize across list elements (the
+#' `data.frame`s) if `dat` is a `list`. Ignored if `dat` is a `data.frame`.
+#' Defaults to `max` for `a_default()` and to `mean` for `k_default()` and
+#' `r_default()`.
 #'
-#' @details Calculates a* as the maximum distance between any two points in the
-#' dataset.
+#' @details
+#' \itemize{
+#'   \item `a_default()` Calculates `a` as the maximum distance between any two
+#'   points in the dataset.
+#'   \item `k_default()` Calculates `k` as the square root of the number of
+#'   points in the dataset.
+#'   \item `r_default()` Calculates `r` as half the maximum nearest neighbor
+#'   distance between points in the dataset.
+#' }
 #'
-#' @seealso Getz et al. (2007) *insert full citation here*
+#' *Note*: computation times can get large with a large dataset.
 #'
-#' @return A numeric vector of length 1 with the value of a*
+#' `r_default()` is the most time-consuming algorithm and has the least
+#' desirable properties (see Getz et al. 2007).
+#'
+#' `a_default()` also requires calculating a distance matrix -- so can also be
+#' somewhat time consuming -- but Getz et al. (2007) found the resulting LoCoH
+#' is robust to the value of `a`.
+#'
+#' `k_default()` is the easiest to compute as it depends only on the
+#' number of points and does not require a distance matrix.
+#'
+#' @seealso These starting algorithms are described by Getz et al. (2007).
+#'  *insert full citation here*
+#'
+#' @return A numeric vector of length 1 with the value of `a`, `k`, or `r`
 #'
 #' @examples
 #'
@@ -90,25 +118,32 @@ fit_locoh <- function(dat, crs = sf::NA_crs_, type = "a", n, ...) {
 #' # data.frame
 #' winter01 <- tracks[which(tracks$id == "ID01" & tracks$season == "Winter"), ]
 #'
-#' a_star(winter01)
+#' a_default(winter01)
+#' k_default(winter01)
+#' r_default(winter01)
 #'
 #' # list
 #' winter <- tracks[which(tracks$season == "Winter"), ]
 #'
 #' winter_list <- split(winter, winter$id)
 #'
-#' a_star(winter)
+#' a_default(winter_list)
+#' k_default(winter_list)
+#' r_default(winter_list)
 #' }
 #'
-#' @rdname a_star
 #' @export
-a_star <- function(dat) {
-  UseMethod("a_star", dat)
+
+# ... default a ----
+#' @rdname a_default
+#' @export
+a_default <- function(dat, ...) {
+  UseMethod("a_default", dat)
 }
 
-#' @rdname a_star
+#' @rdname a_default
 #' @export
-a_star.data.frame <- function(dat) {
+a_default.data.frame <- function(dat) {
   # Check `dat`
   checkmate::assert_data_frame(dat)
 
@@ -122,20 +157,104 @@ a_star.data.frame <- function(dat) {
   return(a)
 }
 
-#' @rdname a_star
+#' @rdname a_default
 #' @export
-a_star.list <- function(dat) {
+a_default.list <- function(dat, FUN = max) {
   # Check `dat`
   checkmate::assert_list(dat, types = "data.frame")
 
   # Get a-star from all
-  a_all <- lapply(dat, a_star.data.frame)
+  a_all <- lapply(dat, a_default.data.frame)
 
   # Keep max
-  a <- max(unlist(a_all))
+  a <- FUN(unlist(a_all))
 
   # Return
   return(a)
+}
+
+# ... default k ----
+#' @rdname a_default
+#' @export
+k_default <- function(dat, ...) {
+  UseMethod("k_default", dat)
+}
+
+#' @rdname a_default
+#' @export
+k_default.data.frame <- function(dat) {
+  # Check `dat`
+  checkmate::assert_data_frame(dat)
+
+  # Get sqrt of rows
+  k <- sqrt(nrow(dat))
+
+  # Return
+  return(k)
+}
+
+#' @rdname a_default
+#' @export
+k_default.list <- function(dat, FUN = mean) {
+  # Check `dat`
+  checkmate::assert_list(dat, types = "data.frame")
+
+  # Get k from all
+  k_all <- lapply(dat, k_default.data.frame)
+
+  # Use function to summarize
+  k <- FUN(unlist(k_all))
+
+  # Return
+  return(k)
+}
+
+# ... default r ----
+#' @rdname a_default
+#' @export
+r_default <- function(dat, ...) {
+  UseMethod("r_default", dat)
+}
+
+#' @rdname a_default
+#' @export
+r_default.data.frame <- function(dat) {
+  # Check `dat`
+  checkmate::assert_data_frame(dat)
+
+  # Calculate distance matrix
+  dm <- stats::dist(dat[, c("x", "y")])
+
+  # Format as matrix
+  m <- as.matrix(dm)
+
+  # Set diagonal to NA
+  diag(m) <- NA
+
+  # Get nearest neighbors
+  nn <- apply(m, 1, min, na.rm = TRUE)
+
+  # Get max
+  r <- max(nn)
+
+  # Return
+  return(r)
+}
+
+#' @rdname a_default
+#' @export
+r_default.list <- function(dat, FUN = mean) {
+  # Check `dat`
+  checkmate::assert_list(dat, types = "data.frame")
+
+  # Get a-star from all
+  r_all <- lapply(dat, r_default.data.frame)
+
+  # Keep max
+  r <- FUN(unlist(r_all))
+
+  # Return
+  return(r)
 }
 
 # Rasterize LoCoH ----
@@ -234,7 +353,7 @@ rasterize_locoh <- function(locoh, r, res) {
 #' winter_list <- split(winter, winter$id)
 #'
 #' # Calculate a for a-LoCoH
-#' a <- a_star(winter_list)
+#' a <- a_default(winter_list)
 #'
 #' # Fit LoCoHs
 #' locoh_list <- lapply(winter_list, fit_locoh, n = a)
