@@ -269,7 +269,7 @@ calc_emd <- function(r_list, mat, check_symmetric = TRUE) {
 
   # Possibly check for symmetry
   if (check_symmetric) {
-    if (isSymmetric) {
+    if (isSymmetric(mat)) {
       stop("Matrix `mat` is symmetric. Decrease estimation time by keeping ",
            "only 1 triangle (see ?upper.tri) or ignore this check by setting ",
            "`check_symmetric` = FALSE.")
