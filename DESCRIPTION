@@ -25,6 +25,9 @@ Imports:
     checkmate,
     rlang,
     sf,
-    move
+    move,
+    lubridate,
+    tidyr,
+    sqldf
 Depends: 
     R (>= 3.5)
