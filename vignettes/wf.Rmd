@@ -1,0 +1,54 @@
+---
+title: "LoCoHverlap Workflows"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{LoCoHverlap Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+`LoCoHverlap` (pronounced “Loke - Overlap”) is an R package to compare animal range overlaps using Local Convex Hull (LoCoH) home range estimators and Earth Mover’s Distance (EMD). 
+
+This vignette describes the workflows that are currently implemented in `LoCoHverlap`, from the basic building block functions that provide the user with flexibility, to the advanced functions that are useful for answering specific ecological questions.
+  
+`LoCoHverlap` currently has 3 distinct workflows:  
+
+  1. **Basic Workflow** -- The basic workflow is the most flexible. It contains only the necessary functions to fit LoCoHs, rasterize, and calculate overlap. It is entirely up to the user to decide how to subset/wrangle their data and setup these comparisons.
+  2. **Seasonal Workflow** -- The seasonal workflow is designed to either (a) compare home ranges for the same animal across seasons, or (b) compare home ranges for different animals in the same season. The seasonal workflow has functions to help iterate the basic workflow over individuals and/or seasons.
+  3. **Moving Window Workflow** -- The moving window workflow is designed to compare ranges for short bursts of time for a single individual. It allows the user to easily specify the size and placement of time windows and then iterates the basic workflow, making range comparisons for consecutive windows.
+  
+## Packages 
+
+We begin by loading the packages we will use in this vignette.
+
+```{r setup}
+library(LoCoHverlap)
+library(dplyr)
+library(amt)
+library(raster)
+library(sf)
+library(lubridate)
+```
+
+## Example Data
+
+Along with the package, I have provided some sample data to illustrate the functions and workflows. These data are simulated trajectories of 4 animals. Data are meant to be projected in UTM Zone 12 (on the WGS84 spheroid, *i.e.*, EPSG:32612). Let's check the header of the data:
+
+```{r sample head}
+head(tracks)
+```
+
+## Basic Workflow
+
+## Seasonal Workflow
+
+## Moving Window Workflow
